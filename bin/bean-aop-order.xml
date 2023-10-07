@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+<!-- 扫描注解所在包-->
+<context:component-scan base-package="com.ssm.aop"></context:component-scan>
+
+<!-- 面向切面编程的配置 -->
+<!-- 第一步将通知所在类及切入点所在类纳入IoC容器 -->
+<!-- 已经通过注解方式将Order类（切入点所在类）纳入到容器中 -->
+<bean id="advice" class="com.ssm.aop.Advice"></bean>
+<!-- 第二步配置切面，即将通知增强到切入点上 -->
+<aop:config>
+	<aop:aspect ref="advice">
+		<aop:pointcut expression="execution(public void com.ssm.aop.Order.add())
+		                          execution(public void com.ssm.aop.Order.delete())" 
+		              id="psPointcut"/>
+		<aop:before method="permission" pointcut-ref="psPointcut"/>
+	</aop:aspect>	
+</aop:config>
+</beans>
